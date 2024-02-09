@@ -2,10 +2,25 @@ const { use } = require("../routes/notes");
 
 const userCtrl = {};
 
-userCtrl.getUsers = (req,res) => res.send('User Routes')
+const User = require('../models/User')
 
-userCtrl.createUser = (req,res) => res.send('User Routes')
+userCtrl.getUsers = async (req,res) => {
+    const users = await User.find();
+    res.json(users)
+}
+userCtrl.createUser = async (req,res) => 
+{
+    const {username} = req.body;
+    const newUser = new User({username})
+    await newUser.save();
+    res.json('User created')
 
-userCtrl.deleteUser = (req,res) => res.send('User Routes')
+}
+
+userCtrl.deleteUser = async (req,res) => 
+{
+    await User.findByIdAndDelete(req.params.id)
+    res.json('User deleted')
+}
 
 module.exports = userCtrl;
